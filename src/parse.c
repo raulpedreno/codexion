@@ -34,9 +34,9 @@ static long	ft_atol(char *str)
 static int	parse_scheduler(char *str)
 {
 	if (strcmp(str, "fifo") == 0)
-		return (SCHED_FIFO);
+		return (SCHEDULER_FIFO);
 	if (strcmp(str, "edf") == 0)
-		return (SCHED_EDF);
+		return (SCHEDULER_EDF);
 	return (0);
 }
 

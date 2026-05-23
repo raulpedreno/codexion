@@ -8,3 +8,60 @@ argv[5] = time_to_refactor
 argv[6] = number_of_compiles_required
 argv[7] = dongle_cooldown
 argv[8] = scheduler
+
+El orden que seguiremos:
+
+Estructuras de datos (header) — coder, dongle, simulation
+init.c — inicializar todo
+time.c + log.c — utilidades de tiempo y logging serializado
+dongles.c + scheduler.c — lógica de adquisición con FIFO/EDF
+routine.c — el hilo de cada coder
+monitor.c — hilo que detecta burnout
+threads.c — lanzar y unir todos los hilos
+cleanup.c — liberar memoria
+main.c — conectar todo
+
+
+┌────────────────────────────────────────────────────────────────┐
+│                           t_sim                                │
+│                     (LA SIMULACIÓN)                            │
+│                                                                │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │                        t_config                          │  │
+│  │  reglas del juego:                                       │  │
+│  │   - number_of_coders                                     │  │
+│  │   - time_to_burnout                                      │  │
+│  │   - time_to_compile                                      │  │
+│  │   - time_to_debug                                        │  │
+│  │   - time_to_refactor                                     │  │
+│  │   - number_of_compiles_required                          │  │
+│  │   - dongle_cooldown                                      │  │
+│  │   - scheduler (FIFO/EDF)                                 │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                │
+│  coders[]  ────────────────►  ┌─────────────────────────────┐  │
+│                                │           t_coder          │  │
+│                                │  - id                      │  │
+│                                │  - compile_count           │  │
+│                                │  - burned_out              │  │
+│                                │  - last_compile_start_ms   │  │
+│                                │  - thread (hilo real)      │  │
+│                                │  - sim (puntero a t_sim)   │  │
+│                                └────────────────────────────┘  │
+│                                                                │
+│  dongles[] ────────────────►  ┌─────────────────────────────┐  │
+│                                │           t_dongle         │  │
+│                                │  - id                      │  │
+│                                │  - in_use                  │  │
+│                                │  - released_at_ms          │  │
+│                                │  - mutex (candado)         │  │
+│                                │  - cond (timbre)           │  │
+│                                │  - queue (t_pqueue)        │  │
+│                                └────────────────────────────┘  │
+│                                                                │
+│  monitor_thread                                                │
+│  log_mutex                                                     │
+│  active_mutex                                                  │
+│  active (bandera de fin)                                       │
+│  start_ms (tiempo inicial)                                     │
+└────────────────────────────────────────────────────────────────┘

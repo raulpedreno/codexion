@@ -3,9 +3,13 @@
 
 # include <stdio.h>
 # include <string.h>
+# include <pthread.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <sys/time.h>
 
-# define SCHED_FIFO 1
-# define SCHED_EDF 2
+# define SCHEDULER_FIFO 1
+# define SCHEDULER_EDF 2
 
 typedef struct s_config
 {
@@ -18,6 +22,57 @@ typedef struct s_config
 	long	dongle_cooldown;
 	int		scheduler;
 }	t_config;
+
+//entrada: Cada vez que un coder pide un dongle → creas un t_waiter
+typedef struct s_waiter
+{
+    int     coder_id;
+    long    request_time_ms;
+    long    deadline_ms;
+}   t_waiter;
+
+
+//cola de un dogle (priority queue)
+typedef struct s_pqueue
+{
+    t_waiter    *data;
+    int         size;
+    int         capacity;
+}   t_pqueue;
+
+
+// recurso compartido entre coders
+typedef struct s_dongle
+{
+    int                 id;
+    int                 in_use;
+    long                released_at_ms;
+    pthread_mutex_t     mutex;  //El mutex protege todo lo que ocurre entre lock y unlock. pthread_mutex_lock(&dongle->mutex);
+    pthread_cond_t      cond;   //Es una herramienta del sistema operativo para dormir y despertar hilos
+    t_pqueue            queue;
+}   t_dongle;
+
+typedef struct s_coder
+{
+    int                 id;
+    int                 compile_count;
+    int                 burned_out;
+    long                last_compile_start_ms;
+    pthread_t           thread;
+    struct s_sim        *sim;
+}   t_coder;
+
+typedef struct s_sim
+{
+    t_config        config;
+    t_coder         *coders;
+    t_dongle        *dongles;
+    int             active;
+    long            start_ms;
+    pthread_mutex_t log_mutex;
+    pthread_mutex_t active_mutex;
+    pthread_t       monitor_thread;
+}   t_sim;
 
 int	parse_args(int argc, char **argv, t_config *config);
 
