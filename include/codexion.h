@@ -75,5 +75,9 @@ typedef struct s_sim
 }   t_sim;
 
 int	parse_args(int argc, char **argv, t_config *config);
+long	get_time_ms(void);
+int	init_sim(t_sim *sim, t_config config);
+void	cleanup_sim(t_sim *sim);
+void	print_log(t_sim *sim, int coder_id, char *message);
 
 #endif
