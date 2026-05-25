@@ -79,5 +79,10 @@ long	get_time_ms(void);
 int	init_sim(t_sim *sim, t_config config);
 void	cleanup_sim(t_sim *sim);
 void	print_log(t_sim *sim, int coder_id, char *message);
+int		is_sim_active(t_sim *sim);
+void	stop_sim(t_sim *sim);
+void	*coder_routine(void *arg);
+int	start_threads(t_sim *sim);
+int	join_threads(t_sim *sim);
 
 #endif
