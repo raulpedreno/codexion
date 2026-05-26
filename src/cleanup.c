@@ -9,6 +9,7 @@ void	cleanup_sim(t_sim *sim)
 	i = 0;
 	while (i < sim->config.number_of_coders)
 	{
+		pthread_mutex_destroy(&sim->coders[i].state_mutex);
 		pthread_mutex_destroy(&sim->dongles[i].mutex);
 		pthread_cond_destroy(&sim->dongles[i].cond);
 		free(sim->dongles[i].queue.data);

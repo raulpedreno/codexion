@@ -65,3 +65,16 @@ main.c — conectar todo
 │  active (bandera de fin)                                       │
 │  start_ms (tiempo inicial)                                     │
 └────────────────────────────────────────────────────────────────┘
+
+
+
+proteger estas variables porque aparte del coder el monitor lee esas variables
+y puede leer mal si el coder esta interactuando por eso aladimos ptreads_lock para
+que solo pueda accerder 1:
+coder->compile_count
+coder->last_compile_start_ms
+coder->burned_out
+
+
+Dormir despues de (comp, deb o ref) es necesario para
+simular que esas acciones tardan asi las salidas en la terminal se mezclan.

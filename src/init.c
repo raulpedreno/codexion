@@ -12,6 +12,8 @@ static void	init_coders(t_sim *sim)
 		sim->coders[i].burned_out = 0;
 		sim->coders[i].last_compile_start_ms = sim->start_ms;
 		sim->coders[i].sim = sim;
+		if (pthread_mutex_init(&sim->coders[i].state_mutex, NULL) != 0)
+			return (1);
 		i++;
 	}
 }
@@ -53,7 +55,8 @@ int	init_sim(t_sim *sim, t_config config)
 		return (1);
 	if (pthread_mutex_init(&sim->active_mutex, NULL) != 0)
 		return (1);
-	init_coders(sim);
+	if (init_coders(sim) != 0)
+		return (1);
 	if (init_dongles(sim) != 0)
 		return (1);
 	return (0);

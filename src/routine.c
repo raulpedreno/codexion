@@ -9,19 +9,33 @@ void	*coder_routine(void *arg)
 	sim = coder->sim;
 	while (is_sim_active(sim))
 	{
+		take_dongles(coder);
+
+		pthread_mutex_lock(&coder->state_mutex);
 		coder->last_compile_start_ms = get_time_ms();
+		pthread_mutex_unlock(&coder->state_mutex);
+		
 		print_log(sim, coder->id, "is compiling");
-		usleep(sim->config.time_to_compile * 1000);
+		smart_sleep(sim, sim->config.time_to_compile)
+
+		pthread_mutex_lock(&coder->state_mutex);
 		coder->compile_count++;
+		pthread_mutex_unlock(&coder->state_mutex);
+
+
+		release_dongles(coder)
 
 		print_log(sim, coder->id, "is debugging");
-		usleep(sim->config.time_to_debug * 1000);
+		smart_sleep(sim, sim->config.time_to_debug);
 
 		print_log(sim, coder->id, "is refactoring");
-		usleep(sim->config.time_to_refactor * 1000);
+		smart_sleep(sim, sim->config.time_to_refactor);
 
-		if (coder->compile_count >= sim->config.number_of_compiles_required)
+		if (all_coders_done(sim))
+		{
+			stop_sim(sim);
 			break ;
+		}
 	}
 	return (NULL);
 }

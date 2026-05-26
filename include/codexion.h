@@ -59,6 +59,7 @@ typedef struct s_coder
     int                 burned_out;
     long                last_compile_start_ms;
     pthread_t           thread;
+    pthread_mutex_t     state_mutex;
     struct s_sim        *sim;
 }   t_coder;
 
@@ -85,6 +86,9 @@ void	*coder_routine(void *arg);
 int	start_threads(t_sim *sim);
 int	join_threads(t_sim *sim);
 void	*monitor_routine(void *arg);
-
+void	take_dongles(t_coder *coder);
+void	release_dongles(t_coder *coder);
+int	all_coders_done(t_sim *sim);
+void	smart_sleep(t_sim *sim, long duration_ms);
 
 #endif
