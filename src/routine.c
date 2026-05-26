@@ -16,14 +16,14 @@ void	*coder_routine(void *arg)
 		pthread_mutex_unlock(&coder->state_mutex);
 		
 		print_log(sim, coder->id, "is compiling");
-		smart_sleep(sim, sim->config.time_to_compile)
+		smart_sleep(sim, sim->config.time_to_compile);
 
 		pthread_mutex_lock(&coder->state_mutex);
 		coder->compile_count++;
 		pthread_mutex_unlock(&coder->state_mutex);
 
 
-		release_dongles(coder)
+		release_dongles(coder);
 
 		print_log(sim, coder->id, "is debugging");
 		smart_sleep(sim, sim->config.time_to_debug);

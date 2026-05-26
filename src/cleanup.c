@@ -12,7 +12,7 @@ void	cleanup_sim(t_sim *sim)
 		pthread_mutex_destroy(&sim->coders[i].state_mutex);
 		pthread_mutex_destroy(&sim->dongles[i].mutex);
 		pthread_cond_destroy(&sim->dongles[i].cond);
-		free(sim->dongles[i].queue.data);
+		pqueue_free(&sim->dongles[i].queue);
 		i++;
 	}
 	pthread_mutex_destroy(&sim->log_mutex);
