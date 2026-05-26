@@ -77,18 +77,25 @@ typedef struct s_sim
 
 int	parse_args(int argc, char **argv, t_config *config);
 long	get_time_ms(void);
-int	init_sim(t_sim *sim, t_config config);
+int	    init_sim(t_sim *sim, t_config config);
 void	cleanup_sim(t_sim *sim);
 void	print_log(t_sim *sim, int coder_id, char *message);
 int		is_sim_active(t_sim *sim);
 void	stop_sim(t_sim *sim);
 void	*coder_routine(void *arg);
-int	start_threads(t_sim *sim);
-int	join_threads(t_sim *sim);
+int	    start_threads(t_sim *sim);
+int	    join_threads(t_sim *sim);
 void	*monitor_routine(void *arg);
 void	take_dongles(t_coder *coder);
 void	release_dongles(t_coder *coder);
-int	all_coders_done(t_sim *sim);
+int	    all_coders_done(t_sim *sim);
 void	smart_sleep(t_sim *sim, long duration_ms);
+
+int		pqueue_init(t_pqueue *queue, int capacity);
+void	pqueue_free(t_pqueue *queue);
+int		pqueue_push(t_pqueue *queue, t_waiter waiter, int scheduler);
+int		pqueue_pop(t_pqueue *queue, t_waiter *out);
+int		pqueue_peek(t_pqueue *queue, t_waiter *out);
+
 
 #endif
