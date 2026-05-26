@@ -2,35 +2,27 @@
 
 int main(int argc, char **argv)
 {
+    t_sim sim;
     t_config config;
 
+    // 1) parse_args → rellenas config
     if (parse_args(argc, argv, &config) != 0)
-    {
-        printf("Error\n");
         return (1);
-    }
-    // probando config
-    printf("number_of_coders: %i\n", config.number_of_coders);
-    printf("time_to_burnout: %li\n", config.time_to_burnout);
-    printf("time_to_compile: %li\n", config.time_to_compile);
-    printf("time_to_debug: %li\n", config.time_to_debug);
-    printf("time_to_refactor: %li\n", config.time_to_refactor);
-    printf("number_of_compiles_required: %i\n", config.number_of_compiles_required);
-    printf("dongle_cooldown: %li\n", config.dongle_cooldown);
-    printf("scheduler: %i\n", config.scheduler);
 
-    // probando funcion get_time_ms()
-    printf("current time: %li\n", get_time_ms());
-
-    // probando init_sim
-    t_sim	sim;
-
+    // 2) init_sim → construyes el mundo
     if (init_sim(&sim, config) != 0)
-    {
-	    printf("Error\n");
-	    return (1);
-    }
-    printf("sim initialized\n");
-    
+        return (1);
+
+    // 3) start_threads → creas los hilos (coders)
+    if (start_threads(&sim) != 0)
+        return (1);
+
+    // 4) join_threads → esperas a que todos terminen
+    if (join_threads(&sim) != 0)
+        return (1);
+
+    // 5) cleanup_sim → destruyes todo
+    cleanup_sim(&sim);
     return (0);
 }
+

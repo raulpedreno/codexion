@@ -84,5 +84,7 @@ void	stop_sim(t_sim *sim);
 void	*coder_routine(void *arg);
 int	start_threads(t_sim *sim);
 int	join_threads(t_sim *sim);
+void	*monitor_routine(void *arg);
+
 
 #endif
