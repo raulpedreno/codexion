@@ -10,7 +10,11 @@ void	*coder_routine(void *arg)
 	while (is_sim_active(sim))
 	{
 		if (all_coders_done(sim))
-			break;
+	{
+    	stop_sim(sim);
+    	wake_all_dongles(sim);
+    	return (NULL);
+	}
 		if (!take_dongles(coder))
 			break ;
 

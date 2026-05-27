@@ -11,10 +11,10 @@ long	get_time_ms(void)
 // sustituye usleep comprueba que ese hilo no esta agotado
 void	smart_sleep(t_sim *sim, long duration_ms)
 {
-	long	start;
+    long	start;
 
-	start = get_time_ms();
-	while (is_sim_active(sim)
-		&& get_time_ms() - start < duration_ms)
-		usleep(500);
+    start = get_time_ms();
+    while (is_sim_active(sim)
+        && get_time_ms() - start < duration_ms)
+        usleep(500);
 }
