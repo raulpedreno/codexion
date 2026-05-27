@@ -9,6 +9,8 @@ void	*coder_routine(void *arg)
 	sim = coder->sim;
 	while (is_sim_active(sim))
 	{
+		if (all_coders_done(sim))
+			break;
 		if (!take_dongles(coder))
 			break ;
 
@@ -32,12 +34,6 @@ void	*coder_routine(void *arg)
 		print_log(sim, coder->id, "is refactoring");
 		smart_sleep(sim, sim->config.time_to_refactor);
 
-		if (all_coders_done(sim))
-		{
-			stop_sim(sim);
-			wake_all_dongles(sim);
-			break ;
-		}
 	}
 	return (NULL);
 }

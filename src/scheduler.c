@@ -93,3 +93,11 @@ int	pqueue_remove_by_coder(t_pqueue *queue, int coder_id)
 	}
 	return (1);
 }
+
+void	pqueue_free(t_pqueue *queue)
+{
+	free(queue->data);
+	queue->data = NULL;
+	queue->size = 0;
+	queue->capacity = 0;
+}

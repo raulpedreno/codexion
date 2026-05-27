@@ -20,11 +20,3 @@ void	cleanup_sim(t_sim *sim)
 	free(sim->coders);
 	free(sim->dongles);
 }
-
-void	pqueue_free(t_pqueue *queue)
-{
-	free(queue->data);
-	queue->data = NULL;
-	queue->size = 0;
-	queue->capacity = 0;
-}
