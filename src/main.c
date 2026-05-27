@@ -10,8 +10,11 @@ int main(int argc, char **argv)
         return (1);
 
     // 2) init_sim → construyes el mundo
-    if (init_sim(&sim, config) != 0)
-        return (1);
+    if (start_threads(&sim) != 0)
+    {
+	    cleanup_sim(&sim);
+	    return (1);
+    }
 
     // 3) start_threads → creas los hilos (coders)
     if (start_threads(&sim) != 0)

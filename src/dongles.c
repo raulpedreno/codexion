@@ -24,7 +24,27 @@ static void	wait_dongle_cooldown(t_sim *sim, t_dongle *dongle)
 		smart_sleep(sim, available_at - now);
 }
 
-static int take_one_dongle(t_coder *coder, int dongle_id)
+static t_waiter	create_waiter(t_coder *coder)
+{
+	t_waiter	waiter;
+	t_sim		*sim;
+	long		now;
+	long		last_compile_start;
+
+	sim = coder->sim;
+	now = get_time_ms();
+
+	pthread_mutex_lock(&coder->state_mutex);
+	last_compile_start = coder->last_compile_start_ms;
+	pthread_mutex_unlock(&coder->state_mutex);
+
+	waiter.coder_id = coder->id;
+	waiter.request_time_ms = now;
+	waiter.deadline_ms = last_compile_start + sim->config.time_to_burnout;
+	return (waiter);
+}
+
+static int	take_one_dongle(t_coder *coder, int dongle_id)
 {
 	t_sim		*sim;
 	t_dongle	*dongle;
@@ -34,12 +54,16 @@ static int take_one_dongle(t_coder *coder, int dongle_id)
 	sim = coder->sim;
 	dongle = &sim->dongles[dongle_id];
 	waiter = create_waiter(coder);
-
 	pthread_mutex_lock(&dongle->mutex);
-	pqueue_push(&dongle->queue, waiter, sim->config.scheduler);
+	if (pqueue_push(&dongle->queue, waiter, sim->config.scheduler) != 0)
+	{
+		pthread_mutex_unlock(&dongle->mutex);
+		return (0);
+	}
 	while (is_sim_active(sim))
 	{
-		pqueue_peek(&dongle->queue, &first);
+		if (pqueue_peek(&dongle->queue, &first) != 0)
+			break ;
 		if (first.coder_id == coder->id && dongle->in_use == 0)
 			break ;
 		pthread_cond_wait(&dongle->cond, &dongle->mutex);
@@ -53,6 +77,7 @@ static int take_one_dongle(t_coder *coder, int dongle_id)
 	}
 	pqueue_remove_by_coder(&dongle->queue, coder->id);
 	dongle->in_use = 1;
+	pthread_cond_broadcast(&dongle->cond);
 	wait_dongle_cooldown(sim, dongle);
 	print_log(sim, coder->id, "has taken a dongle");
 	pthread_mutex_unlock(&dongle->mutex);
@@ -124,23 +149,17 @@ void	release_dongles(t_coder *coder)
 	release_one_dongle(sim, left);
 }
 
-static t_waiter	create_waiter(t_coder *coder)
+void	wake_all_dongles(t_sim *sim)
 {
-	t_waiter	waiter;
-	t_sim		*sim;
-	long		now;
-	long		last_compile_start;
+	int	i;
 
-	sim = coder->sim;
-	now = get_time_ms();
-
-	pthread_mutex_lock(&coder->state_mutex);
-	last_compile_start = coder->last_compile_start_ms;
-	pthread_mutex_unlock(&coder->state_mutex);
-
-	waiter.coder_id = coder->id;
-	waiter.request_time_ms = now;
-	waiter.deadline_ms = last_compile_start + sim->config.time_to_burnout;
-	return (waiter);
+	i = 0;
+	while (i < sim->config.number_of_coders)
+	{
+		pthread_mutex_lock(&sim->dongles[i].mutex);
+		pthread_cond_broadcast(&sim->dongles[i].cond);
+		pthread_mutex_unlock(&sim->dongles[i].mutex);
+		i++;
+	}
 }
 

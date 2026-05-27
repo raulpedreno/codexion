@@ -35,6 +35,7 @@ void	*coder_routine(void *arg)
 		if (all_coders_done(sim))
 		{
 			stop_sim(sim);
+			wake_all_dongles(sim);
 			break ;
 		}
 	}

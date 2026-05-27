@@ -97,6 +97,7 @@ int		pqueue_push(t_pqueue *queue, t_waiter waiter, int scheduler);
 int		pqueue_pop(t_pqueue *queue, t_waiter *out);
 int		pqueue_peek(t_pqueue *queue, t_waiter *out);
 int     pqueue_remove_by_coder(t_pqueue *queue, int coder_id);
+void	wake_all_dongles(t_sim *sim);
 
 
 #endif
