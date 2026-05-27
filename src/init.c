@@ -62,3 +62,13 @@ int	init_sim(t_sim *sim, t_config config)
 		return (1);
 	return (0);
 }
+
+int	pqueue_init(t_pqueue *queue, int capacity)
+{
+	queue->data = malloc(sizeof(t_waiter) * capacity);
+	if (!queue->data)
+		return (1);
+	queue->size = 0;
+	queue->capacity = capacity;
+	return (0);
+}

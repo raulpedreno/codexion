@@ -86,7 +86,7 @@ void	*coder_routine(void *arg);
 int	    start_threads(t_sim *sim);
 int	    join_threads(t_sim *sim);
 void	*monitor_routine(void *arg);
-void	take_dongles(t_coder *coder);
+int 	take_dongles(t_coder *coder);
 void	release_dongles(t_coder *coder);
 int	    all_coders_done(t_sim *sim);
 void	smart_sleep(t_sim *sim, long duration_ms);
@@ -96,6 +96,7 @@ void	pqueue_free(t_pqueue *queue);
 int		pqueue_push(t_pqueue *queue, t_waiter waiter, int scheduler);
 int		pqueue_pop(t_pqueue *queue, t_waiter *out);
 int		pqueue_peek(t_pqueue *queue, t_waiter *out);
+int     pqueue_remove_by_coder(t_pqueue *queue, int coder_id);
 
 
 #endif

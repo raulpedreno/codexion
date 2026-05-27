@@ -9,7 +9,8 @@ void	*coder_routine(void *arg)
 	sim = coder->sim;
 	while (is_sim_active(sim))
 	{
-		take_dongles(coder);
+		if (!take_dongles(coder))
+			break ;
 
 		pthread_mutex_lock(&coder->state_mutex);
 		coder->last_compile_start_ms = get_time_ms();
