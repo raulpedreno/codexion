@@ -6,13 +6,13 @@
 /*   By: rpedreno <rpedreno@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 15:32:50 by rpedreno          #+#    #+#             */
-/*   Updated: 2026/05/28 15:46:42 by rpedreno         ###   ########.fr       */
+/*   Updated: 2026/05/28 16:03:55 by rpedreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
-static int	is_number(char *str)
+int	is_number(char *str)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ static int	is_number(char *str)
 	return (1);
 }
 
-static long	ft_atol(char *str)
+long	ft_atol(char *str)
 {
 	long	result;
 	int		i;
@@ -43,7 +43,7 @@ static long	ft_atol(char *str)
 	return (result);
 }
 
-static int	parse_scheduler(char *str)
+int	parse_scheduler(char *str)
 {
 	if (strcmp(str, "fifo") == 0)
 		return (SCHEDULER_FIFO);
@@ -56,9 +56,8 @@ int	parse_args(int argc, char **argv, t_config *config)
 {
 	if (argc != 9)
 		return (1);
-	if (!is_number(argv[1]) || !is_number(argv[2])
-		|| !is_number(argv[3]) || !is_number(argv[4])
-		|| !is_number(argv[5]) || !is_number(argv[6])
+	if (!is_number(argv[1]) || !is_number(argv[2]) || !is_number(argv[3])
+		|| !is_number(argv[4]) || !is_number(argv[5]) || !is_number(argv[6])
 		|| !is_number(argv[7]))
 		return (1);
 	config->number_of_coders = ft_atol(argv[1]);
@@ -73,7 +72,8 @@ int	parse_args(int argc, char **argv, t_config *config)
 		return (1);
 	if (config->number_of_coders <= 0 || config->time_to_burnout <= 0
 		|| config->time_to_compile <= 0 || config->time_to_debug <= 0
-		|| config->time_to_refactor <= 0 || config->number_of_compiles_required <= 0
+		|| config->time_to_refactor <= 0
+		|| config->number_of_compiles_required <= 0
 		|| config->dongle_cooldown < 0)
 		return (1);
 	return (0);

@@ -14,24 +14,24 @@
 
 void	cleanup_sim(t_sim *sim)
 {
-    int	i;
+	int	i;
 
-    if (!sim)
-        return ;
-    i = 0;
-    if (sim->dongles && sim->coders)
-    {
-        while (i < sim->config.number_of_coders)
-        {
-            pthread_mutex_destroy(&sim->coders[i].state_mutex);
-            pthread_mutex_destroy(&sim->dongles[i].mutex);
-            pthread_cond_destroy(&sim->dongles[i].cond);
-            pqueue_free(&sim->dongles[i].queue);
-            i++;
-        }
-    }
-    pthread_mutex_destroy(&sim->log_mutex);
-    pthread_mutex_destroy(&sim->active_mutex);
-    free(sim->coders);
-    free(sim->dongles);
+	if (!sim)
+		return ;
+	i = 0;
+	if (sim->dongles && sim->coders)
+	{
+		while (i < sim->config.number_of_coders)
+		{
+			pthread_mutex_destroy(&sim->coders[i].state_mutex);
+			pthread_mutex_destroy(&sim->dongles[i].mutex);
+			pthread_cond_destroy(&sim->dongles[i].cond);
+			pqueue_free(&sim->dongles[i].queue);
+			i++;
+		}
+	}
+	pthread_mutex_destroy(&sim->log_mutex);
+	pthread_mutex_destroy(&sim->active_mutex);
+	free(sim->coders);
+	free(sim->dongles);
 }

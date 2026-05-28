@@ -6,13 +6,13 @@
 /*   By: rpedreno <rpedreno@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/28 15:32:17 by rpedreno          #+#    #+#             */
-/*   Updated: 2026/05/28 15:32:20 by rpedreno         ###   ########.fr       */
+/*   Updated: 2026/05/28 16:04:26 by rpedreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
-static int init_coders(t_sim *sim)
+int	init_coders(t_sim *sim)
 {
 	int	i;
 
@@ -31,7 +31,7 @@ static int init_coders(t_sim *sim)
 	return (0);
 }
 
-static int	init_dongles(t_sim *sim)
+int	init_dongles(t_sim *sim)
 {
 	int	i;
 
@@ -42,7 +42,7 @@ static int	init_dongles(t_sim *sim)
 		sim->dongles[i].in_use = 0;
 		sim->dongles[i].released_at_ms = 0;
 		if (pqueue_init(&sim->dongles[i].queue,
-		sim->config.number_of_coders) != 0)
+				sim->config.number_of_coders) != 0)
 			return (1);
 		if (pthread_mutex_init(&sim->dongles[i].mutex, NULL) != 0)
 			return (1);

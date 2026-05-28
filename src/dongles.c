@@ -16,7 +16,7 @@ static int	get_left_dongle(t_coder *coder)
 {
 	return (coder->id - 1);
 }
-// [C1] - D1 - [C2] - D2 - [C3] - D3 - [C4] - D4 - [C5] - D5 - [C1]
+
 static int	get_right_dongle(t_coder *coder)
 {
 	t_sim	*sim;
@@ -24,7 +24,7 @@ static int	get_right_dongle(t_coder *coder)
 	sim = coder->sim;
 	return (coder->id % sim->config.number_of_coders);
 }
-// 💿❄️
+
 static void	wait_dongle_cooldown(t_sim *sim, t_dongle *dongle)
 {
 	long	now;
@@ -45,11 +45,9 @@ static t_waiter	create_waiter(t_coder *coder)
 
 	sim = coder->sim;
 	now = get_time_ms();
-
 	pthread_mutex_lock(&coder->state_mutex);
 	last_compile_start = coder->last_compile_start_ms;
 	pthread_mutex_unlock(&coder->state_mutex);
-
 	waiter.coder_id = coder->id;
 	waiter.request_time_ms = now;
 	waiter.deadline_ms = last_compile_start + sim->config.time_to_burnout;
@@ -174,4 +172,3 @@ void	wake_all_dongles(t_sim *sim)
 		i++;
 	}
 }
-
