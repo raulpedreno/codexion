@@ -1,18 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   time.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rpedreno <rpedreno@student.42malaga.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/28 15:33:17 by rpedreno          #+#    #+#             */
+/*   Updated: 2026/05/28 15:50:59 by rpedreno         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/codexion.h"
 
 long	get_time_ms(void)
 {
-	struct timeval	tv; //estructura del SO
+    struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));  //devuelve todo los milisegundos
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-// sustituye usleep comprueba que ese hilo no esta agotado
 void	smart_sleep(t_sim *sim, long duration_ms)
 {
-    long	start;
-
+    long    start;
+    
     start = get_time_ms();
     while (is_sim_active(sim)
         && get_time_ms() - start < duration_ms)
