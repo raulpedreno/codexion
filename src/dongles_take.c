@@ -12,32 +12,34 @@
 
 #include "../include/codexion.h"
 
+static int	wait_turn(t_coder *coder, t_dongle *dongle)
+{
+	t_waiter	first;
+
+	while (is_sim_active(coder->sim))
+	{
+		if (pqueue_peek(&dongle->queue, &first) != 0)
+			break ;
+		if (first.coder_id == coder->id && dongle->in_use == 0)
+			return (1);
+		pthread_cond_wait(&dongle->cond, &dongle->mutex);
+	}
+	return (0);
+}
 
 int	take_one_dongle(t_coder *coder, int dongle_id)
 {
 	t_sim		*sim;
 	t_dongle	*dongle;
 	t_waiter	waiter;
-	t_waiter	first;
 
 	sim = coder->sim;
 	dongle = &sim->dongles[dongle_id];
 	waiter = create_waiter(coder);
 	pthread_mutex_lock(&dongle->mutex);
 	if (pqueue_push(&dongle->queue, waiter, sim->config.scheduler) != 0)
-	{
-		pthread_mutex_unlock(&dongle->mutex);
-		return (0);
-	}
-	while (is_sim_active(sim))
-	{
-		if (pqueue_peek(&dongle->queue, &first) != 0)
-			break ;
-		if (first.coder_id == coder->id && dongle->in_use == 0)
-			break ;
-		pthread_cond_wait(&dongle->cond, &dongle->mutex);
-	}
-	if (!is_sim_active(sim))
+		return (pthread_mutex_unlock(&dongle->mutex), 0);
+	if (!wait_turn(coder, dongle))
 	{
 		pqueue_remove_by_coder(&dongle->queue, coder->id);
 		pthread_cond_broadcast(&dongle->cond);
