@@ -1,28 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dongles_signal.c                                          :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpedreno <rpedreno@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/28 15:32:09 by rpedreno          #+#    #+#             */
-/*   Updated: 2026/05/28 15:32:12 by rpedreno         ###   ########.fr       */
+/*   Created: 2026/05/28 15:32:32 by rpedreno          #+#    #+#             */
+/*   Updated: 2026/05/28 15:32:34 by rpedreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/codexion.h"
+#include "../codexion.h"
 
-
-void	wake_all_dongles(t_sim *sim)
+int	main(int argc, char **argv)
 {
-	int	i;
+	t_sim		sim;
+	t_config	config;
 
-	i = 0;
-	while (i < sim->config.number_of_coders)
+	if (parse_args(argc, argv, &config) != 0)
+		return (1);
+	if (init_sim(&sim, config) != 0)
 	{
-		pthread_mutex_lock(&sim->dongles[i].mutex);
-		pthread_cond_broadcast(&sim->dongles[i].cond);
-		pthread_mutex_unlock(&sim->dongles[i].mutex);
-		i++;
+		cleanup_sim(&sim);
+		return (1);
 	}
+	if (start_threads(&sim) != 0)
+	{
+		cleanup_sim(&sim);
+		return (1);
+	}
+	if (join_threads(&sim) != 0)
+	{
+		cleanup_sim(&sim);
+		return (1);
+	}
+	cleanup_sim(&sim);
+	return (0);
 }

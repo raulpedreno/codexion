@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/codexion.h"
+#include "../codexion.h"
 
 int	is_sim_active(t_sim *sim)
 {

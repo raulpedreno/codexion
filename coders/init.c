@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/codexion.h"
+#include "../codexion.h"
 
 int	init_coders(t_sim *sim)
 {

@@ -3,21 +3,21 @@ NAME = codexion
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
 
-SRC =	src/main.c \
-		src/parse.c \
-		src/init.c \
-		src/cleanup.c \
-		src/log.c \
-		src/utils.c \
-		src/time.c \
-		src/routine.c \
-		src/threads.c \
-		src/monitor.c \
-		src/dongles.c \
-		src/dongles_utils.c \
-		src/dongles_take.c \
-		src/dongles_signal.c \
-		src/scheduler.c
+SRC =	coders/main.c \
+		coders/parse.c \
+		coders/init.c \
+		coders/cleanup.c \
+		coders/log.c \
+		coders/utils.c \
+		coders/time.c \
+		coders/routine.c \
+		coders/threads.c \
+		coders/monitor.c \
+		coders/dongles.c \
+		coders/dongles_utils.c \
+		coders/dongles_take.c \
+		coders/dongles_signal.c \
+		coders/scheduler.c
 
 OBJ = $(SRC:.c=.o)
 

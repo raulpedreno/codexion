@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/codexion.h"
+#include "../codexion.h"
 
 static int	check_coder_burnout(t_sim *sim, t_coder *coder)
 {

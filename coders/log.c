@@ -1,39 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   log.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rpedreno <rpedreno@student.42malaga.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/28 15:32:32 by rpedreno          #+#    #+#             */
-/*   Updated: 2026/05/28 15:32:34 by rpedreno         ###   ########.fr       */
+/*   Created: 2026/05/28 15:32:25 by rpedreno          #+#    #+#             */
+/*   Updated: 2026/05/28 15:32:28 by rpedreno         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/codexion.h"
+#include "../codexion.h"
 
-int	main(int argc, char **argv)
+void	print_log(t_sim *sim, int coder_id, char *message)
 {
-	t_sim		sim;
-	t_config	config;
+	long	timestamp;
 
-	if (parse_args(argc, argv, &config) != 0)
-		return (1);
-	if (init_sim(&sim, config) != 0)
+	pthread_mutex_lock(&sim->log_mutex);
+	if (is_sim_active(sim) || strcmp(message, "burned out") == 0)
 	{
-		cleanup_sim(&sim);
-		return (1);
+		timestamp = get_time_ms() - sim->start_ms;
+		printf("%li %i %s\n", timestamp, coder_id, message);
 	}
-	if (start_threads(&sim) != 0)
-	{
-		cleanup_sim(&sim);
-		return (1);
-	}
-	if (join_threads(&sim) != 0)
-	{
-		cleanup_sim(&sim);
-		return (1);
-	}
-	cleanup_sim(&sim);
-	return (0);
+	pthread_mutex_unlock(&sim->log_mutex);
 }

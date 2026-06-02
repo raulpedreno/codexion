@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/codexion.h"
+#include "../codexion.h"
 
 static int	wait_turn(t_coder *coder, t_dongle *dongle)
 {
