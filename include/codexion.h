@@ -106,5 +106,10 @@ int					pqueue_pop(t_pqueue *queue, t_waiter *out);
 int					pqueue_peek(t_pqueue *queue, t_waiter *out);
 int					pqueue_remove_by_coder(t_pqueue *queue, int coder_id);
 void				wake_all_dongles(t_sim *sim);
-
+int					get_left_dongle(t_coder *coder);
+int					get_right_dongle(t_coder *coder);
+void				wait_dongle_cooldown(t_sim *sim, t_dongle *dongle);
+t_waiter			create_waiter(t_coder *coder);
+void				release_one_dongle(t_sim *sim, int dongle_id);
+int					take_one_dongle(t_coder *coder, int dongle_id);
 #endif
