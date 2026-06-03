@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../codexion.h"
+#include "codexion.h"
 
 void	print_log(t_sim *sim, int coder_id, char *message)
 {

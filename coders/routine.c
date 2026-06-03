@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../codexion.h"
+#include "codexion.h"
 
 static void	do_compile(t_coder *coder)
 {

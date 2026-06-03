@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../codexion.h"
+#include "codexion.h"
 
 static int	take_even_dongles(t_coder *coder, int left, int right)
 {

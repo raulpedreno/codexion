@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../codexion.h"
+#include "codexion.h"
 
 static int	waiter_goes_before(t_waiter a, t_waiter b, int scheduler)
 {

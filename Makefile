@@ -21,14 +21,14 @@ SRC =	coders/main.c \
 
 OBJ = $(SRC:.c=.o)
 
-INCLUDE = -I include
+INCLUDE = -I coders
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
-%.o: %.c include/codexion.h
+%.o: %.c coders/codexion.h
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
